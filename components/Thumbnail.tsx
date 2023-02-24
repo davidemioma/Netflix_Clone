@@ -29,6 +29,7 @@ const Thumbnail = ({ movie }: Props) => {
         }`}
         layout="fill"
         objectFit="cover"
+        alt=""
       />
     </div>
   );
