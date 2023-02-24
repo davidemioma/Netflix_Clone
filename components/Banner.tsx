@@ -13,6 +13,7 @@ interface Props {
 
 const Banner = ({ movies }: Props) => {
   const dispatch = useDispatch();
+
   const [movie, setMovie] = useState<MovieProps>();
 
   const onClickListener = () => {
@@ -23,7 +24,7 @@ const Banner = ({ movies }: Props) => {
 
   useEffect(() => {
     setMovie(movies[Math.floor(Math.random() * movies.length - 1)]);
-  }, []);
+  }, [movies]);
 
   return (
     <div className="absolute top-0">

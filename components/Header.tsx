@@ -56,7 +56,7 @@ const Header = () => {
           </a>
         </div>
 
-        <Link href="/account">
+        <Link href="">
           <img
             className="w-7 h-7 cursor-pointer"
             src="/assets/avatar.webp"
