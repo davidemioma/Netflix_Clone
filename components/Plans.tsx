@@ -35,7 +35,7 @@ const Plans = () => {
 
       <main className="py-10 px-5 md:px-10 mx-auto max-w-5xl transition-all">
         <h1 className="text-2xl md:text-3xl font-semibold mb-3">
-          Choose the plan that's right for you
+          Choose the plan that&aposs right for you
         </h1>
 
         <ul>
