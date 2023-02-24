@@ -33,12 +33,6 @@ const Home = ({
 }: Props) => {
   const playerOpen = useSelector(moviePlayerSelector);
 
-  const subscription = null;
-
-  // if (!subscription) {
-  //   return <Plans />;
-  // }
-
   return (
     <div
       className={`${
