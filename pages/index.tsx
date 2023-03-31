@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import axios from "axios";
 import request from "../util/request";
@@ -8,6 +9,9 @@ import Row from "../components/Row";
 import MoviePlayer from "../components/MoviePlayer";
 import { useSelector } from "react-redux";
 import { moviePlayerSelector } from "../store/ui-slice";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { collection, onSnapshot } from "@firebase/firestore";
+import { auth, db } from "../firebase";
 import Plans from "../components/Plans";
 
 interface Props {
@@ -31,7 +35,27 @@ const Home = ({
   romanceMovies,
   documentaries,
 }: Props) => {
+  const [user] = useAuthState(auth);
+
+  const [myList, setMyList] = useState<MovieProps[]>([]);
+
   const playerOpen = useSelector(moviePlayerSelector);
+
+  useEffect(
+    () =>
+      onSnapshot(
+        collection(db, "users", `${user?.uid}`, "bookmarks"),
+        (snapshot) => {
+          setMyList(
+            snapshot.docs.map((doc: any) => ({
+              id: doc.id,
+              ...doc.data(),
+            }))
+          );
+        }
+      ),
+    []
+  );
 
   return (
     <div
@@ -70,6 +94,10 @@ const Home = ({
           <Row title="Romance Movies" movies={romanceMovies} />
 
           <Row title="Documentaries" movies={documentaries} />
+        </section>
+
+        <section id="myList">
+          <Row title="My List" movies={myList} />
         </section>
       </main>
 
