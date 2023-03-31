@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { currentMovieSelector } from "../store/ui-slice";
 import requests from "../util/request";
 import { Genre } from "../types";
@@ -14,9 +15,20 @@ import {
   VolumeOffIcon,
   VolumeUpIcon,
 } from "@heroicons/react/outline";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  setDoc,
+} from "@firebase/firestore";
+import { auth, db } from "../firebase";
+import { MovieProps } from "../types";
 
 const MoviePlayer = () => {
   const dispatch = useDispatch();
+
+  const [user] = useAuthState(auth);
 
   const currentMovie = useSelector(currentMovieSelector);
 
@@ -29,6 +41,10 @@ const MoviePlayer = () => {
   const [muted, setMuted] = useState(true);
 
   const [playing, setPlaying] = useState(false);
+
+  const [myList, setMyList] = useState<MovieProps[]>([]);
+
+  const [loading, setLoading] = useState(false);
 
   const [addedToList, setAddedToList] = useState(false);
 
@@ -57,6 +73,62 @@ const MoviePlayer = () => {
 
     fetchMovie();
   }, [currentMovie]);
+
+  useEffect(
+    () =>
+      onSnapshot(
+        collection(db, "users", `${user?.uid}`, "bookmarks"),
+        (snapshot) => {
+          setMyList(
+            snapshot.docs.map((doc: any) => ({
+              id: doc.id,
+              ...doc.data(),
+            }))
+          );
+        }
+      ),
+    []
+  );
+
+  useEffect(
+    () =>
+      setAddedToList(
+        myList?.findIndex((movie) => `${movie.id}` === `${currentMovie.id}`) !==
+          -1
+      ),
+    [currentMovie.id, myList]
+  );
+
+  const addToList = async () => {
+    setLoading(true);
+
+    if (!currentMovie) return;
+
+    try {
+      const { id, ...rest } = currentMovie;
+
+      if (addedToList) {
+        await deleteDoc(
+          doc(db, "users", `${user?.uid}`, "bookmarks", `${currentMovie.id}`)
+        );
+
+        setLoading(false);
+      } else {
+        await setDoc(
+          doc(db, "users", `${user?.uid}`, "bookmarks", `${currentMovie.id}`),
+          {
+            ...rest,
+          }
+        );
+
+        setLoading(false);
+      }
+    } catch (err) {
+      setLoading(false);
+
+      alert(err);
+    }
+  };
 
   return (
     <div className="fixed top-0 left-0 h-screen overflow-x-scroll w-screen bg-black/60 z-50">
@@ -91,7 +163,11 @@ const MoviePlayer = () => {
               {playing ? "Pause" : "Play"}
             </button>
 
-            <button className="modalBtn border-2 border-white">
+            <button
+              className="modalBtn border-2 border-white disabled:cursor-not-allowed"
+              onClick={addToList}
+              disabled={loading}
+            >
               {addedToList ? (
                 <CheckIcon className="h-5 w-5" />
               ) : (
