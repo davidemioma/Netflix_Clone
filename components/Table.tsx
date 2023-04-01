@@ -15,6 +15,7 @@ const Table = ({ products, selectedPlan }: Props) => {
 
         {products.map((product) => (
           <p
+            key={product.id}
             className={`${
               selectedPlan?.id === product.id ? "text-[#e50914]" : "text-[gray]"
             } tableDataFeature`}
@@ -29,6 +30,7 @@ const Table = ({ products, selectedPlan }: Props) => {
 
         {products.map((product) => (
           <p
+            key={product.id}
             className={`${
               selectedPlan?.id === product.id ? "text-[#e50914]" : "text-[gray]"
             } tableDataFeature capitalize`}
@@ -43,6 +45,7 @@ const Table = ({ products, selectedPlan }: Props) => {
 
         {products.map((product) => (
           <p
+            key={product.id}
             className={`${
               selectedPlan?.id === product.id ? "text-[#e50914]" : "text-[gray]"
             } tableDataFeature`}
@@ -58,7 +61,10 @@ const Table = ({ products, selectedPlan }: Props) => {
         </p>
 
         {products.map((product) => (
-          <span className="tableDataFeature flex justify-center">
+          <span
+            key={product.id}
+            className="tableDataFeature flex justify-center"
+          >
             {product.metadata.portability ? (
               <CheckIcon
                 className={`w-6 h-6 ${
