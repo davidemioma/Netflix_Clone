@@ -12,6 +12,8 @@ import { moviePlayerSelector } from "../store/ui-slice";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { collection, onSnapshot } from "@firebase/firestore";
 import { auth, db } from "../firebase";
+import { getProducts, Product } from "@stripe/firestore-stripe-payments";
+import payments from "../lib/stripe";
 import Plans from "../components/Plans";
 
 interface Props {
@@ -23,6 +25,7 @@ interface Props {
   horrorMovies: MovieProps[];
   romanceMovies: MovieProps[];
   documentaries: MovieProps[];
+  products: Product[];
 }
 
 const Home = ({
@@ -34,12 +37,15 @@ const Home = ({
   horrorMovies,
   romanceMovies,
   documentaries,
+  products,
 }: Props) => {
   const [user] = useAuthState(auth);
 
   const [myList, setMyList] = useState<MovieProps[]>([]);
 
   const playerOpen = useSelector(moviePlayerSelector);
+
+  const subscription = false;
 
   useEffect(
     () =>
@@ -56,6 +62,8 @@ const Home = ({
       ),
     []
   );
+
+  if (!subscription) return <Plans products={products} />;
 
   return (
     <div
@@ -107,6 +115,11 @@ const Home = ({
 };
 
 export const getServerSideProps = async (context: any) => {
+  const products = await getProducts(payments, {
+    includePrices: true,
+    activeOnly: true,
+  });
+
   const [
     netflixOriginals,
     trendingNow,
@@ -137,6 +150,7 @@ export const getServerSideProps = async (context: any) => {
       horrorMovies: horrorMovies.data.results,
       romanceMovies: romanceMovies.data.results,
       documentaries: documentaries.data.results,
+      products,
     },
   };
 };

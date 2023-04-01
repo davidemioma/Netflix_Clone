@@ -4,12 +4,17 @@ import Link from "next/link";
 import { signOut } from "@firebase/auth";
 import { auth } from "../firebase";
 import { CheckIcon } from "@heroicons/react/outline";
+import { Product } from "@stripe/firestore-stripe-payments";
 
-const Plans = () => {
+interface Props {
+  products: Product[];
+}
+
+const Plans = ({ products }: Props) => {
   return (
     <div>
       <Head>
-        <title>Netflix Clone - Plans</title>
+        <title>Netflix - Plans</title>
 
         <link rel="icon" href="/netflix-logo.jpeg" />
       </Head>
@@ -25,17 +30,14 @@ const Plans = () => {
           />
         </Link>
 
-        <button
-          className="text-base md:text-lg hover:underline"
-          onClick={() => signOut(auth)}
-        >
+        <button className="hover:underline" onClick={() => signOut(auth)}>
           Sign Out
         </button>
       </header>
 
       <main className="py-10 px-5 md:px-10 mx-auto max-w-5xl transition-all">
         <h1 className="text-2xl md:text-3xl font-semibold mb-3">
-          Choose the plan that&aposs right for you
+          Choose the plan that is right for you
         </h1>
 
         <ul>
@@ -57,11 +59,11 @@ const Plans = () => {
 
         <div className="mt-4">
           <div className="w-full flex items-center self-end md:w-3/5">
-            <div className="planBox">Standard</div>
-
-            <div className="planBox">Standard</div>
-
-            <div className="planBox">Standard</div>
+            {products.map((product) => (
+              <div key={product.id} className="planBox">
+                {product.name}
+              </div>
+            ))}
           </div>
 
           <button className="bg-[#E50914] hover:bg-[#f6121d] mt-8 py-3 mx-auto w-11/12 sm:w-[420px] shadow-md text-white rounded">
