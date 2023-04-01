@@ -15,6 +15,7 @@ import { auth, db } from "../firebase";
 import { getProducts, Product } from "@stripe/firestore-stripe-payments";
 import payments from "../lib/stripe";
 import Plans from "../components/Plans";
+import useSubscription from "../hooks/useSubscription";
 
 interface Props {
   netflixOriginals: MovieProps[];
@@ -39,13 +40,13 @@ const Home = ({
   documentaries,
   products,
 }: Props) => {
-  const [user] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
 
   const [myList, setMyList] = useState<MovieProps[]>([]);
 
   const playerOpen = useSelector(moviePlayerSelector);
 
-  const subscription = false;
+  const subscription = useSubscription();
 
   useEffect(
     () =>
@@ -62,6 +63,8 @@ const Home = ({
       ),
     []
   );
+
+  if (loading || subscription === null) return null;
 
   if (!subscription) return <Plans products={products} />;
 
@@ -104,9 +107,11 @@ const Home = ({
           <Row title="Documentaries" movies={documentaries} />
         </section>
 
-        <section id="myList">
-          <Row title="My List" movies={myList} />
-        </section>
+        {myList.length > 0 && (
+          <section id="myList">
+            <Row title="My List" movies={myList} />
+          </section>
+        )}
       </main>
 
       {playerOpen && <MoviePlayer />}
