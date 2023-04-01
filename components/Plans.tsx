@@ -1,16 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { signOut } from "@firebase/auth";
 import { auth } from "../firebase";
 import { CheckIcon } from "@heroicons/react/outline";
 import { Product } from "@stripe/firestore-stripe-payments";
+import Table from "./Table";
+import BtnSpinner from "./BtnSpinner";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { loadCheckout } from "../lib/stripe";
 
 interface Props {
   products: Product[];
 }
 
 const Plans = ({ products }: Props) => {
+  const [user] = useAuthState(auth);
+
+  const [selectedPlan, setSeletedPlan] = useState<Product | null>(products[2]);
+
+  const [loading, setLoading] = useState(false);
+
+  const subscribeHandler = async () => {
+    setLoading(true);
+
+    try {
+      await loadCheckout(selectedPlan?.prices[0]?.id!);
+
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+
+      console.log(err);
+    }
+  };
+
   return (
     <div>
       <Head>
@@ -57,17 +81,29 @@ const Plans = ({ products }: Props) => {
           </li>
         </ul>
 
-        <div className="mt-4">
-          <div className="w-full flex items-center self-end md:w-3/5">
+        <div className="w-full mt-7 flex flex-col">
+          <div className="w-full md:w-3/5 flex items-center self-end justify-end">
             {products.map((product) => (
-              <div key={product.id} className="planBox">
+              <div
+                key={product.id}
+                className={`${
+                  selectedPlan?.id === product.id ? "opacity-100" : "opacity-60"
+                } planBox`}
+                onClick={() => setSeletedPlan(product)}
+              >
                 {product.name}
               </div>
             ))}
           </div>
 
-          <button className="bg-[#E50914] hover:bg-[#f6121d] mt-8 py-3 mx-auto w-11/12 sm:w-[420px] shadow-md text-white rounded">
-            Subscribe
+          <Table products={products} selectedPlan={selectedPlan} />
+
+          <button
+            className="bg-[#E50914] flex items-center justify-center mt-6 hover:bg-[#f6121d] py-3 mx-auto w-11/12 sm:w-[420px] shadow-md text-white rounded disabled:cursor-not-allowed"
+            disabled={loading || !selectedPlan || !user}
+            onClick={subscribeHandler}
+          >
+            {loading ? <BtnSpinner /> : <p>Subscribe</p>}
           </button>
         </div>
       </main>
