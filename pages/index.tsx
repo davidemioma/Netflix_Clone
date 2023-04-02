@@ -7,7 +7,6 @@ import Header from "../components/Header";
 import Banner from "../components/Banner";
 import Row from "../components/Row";
 import MoviePlayer from "../components/MoviePlayer";
-import { useSelector } from "react-redux";
 import { moviePlayerSelector } from "../store/ui-slice";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { collection, onSnapshot } from "@firebase/firestore";
@@ -16,6 +15,9 @@ import { getProducts, Product } from "@stripe/firestore-stripe-payments";
 import payments from "../lib/stripe";
 import Plans from "../components/Plans";
 import useSubscription from "../hooks/useSubscription";
+import { useDispatch, useSelector } from "react-redux";
+import { menuSelector } from "../store/ui-slice";
+import { setOpenMenu } from "../store/store";
 
 interface Props {
   netflixOriginals: MovieProps[];
@@ -48,6 +50,10 @@ const Home = ({
 
   const subscription = useSubscription();
 
+  const dispatch = useDispatch();
+
+  const openMenu = useSelector(menuSelector);
+
   useEffect(
     () =>
       onSnapshot(
@@ -73,6 +79,7 @@ const Home = ({
       className={`${
         playerOpen ? "h-screen overflow-hidden" : "h-screen lg:h-[140vh]"
       } relative w-screen bg-gradient-to-b`}
+      onClick={() => openMenu && dispatch(setOpenMenu(false))}
     >
       <Head>
         <title>Netflix Clone - Home</title>

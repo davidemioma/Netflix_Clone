@@ -7,7 +7,11 @@ const store = configureStore({
   },
 });
 
-export const { openMoviePlayer, closeMoviePlayer, setCurrentMovie } =
-  UiSlice.actions;
+export const {
+  openMoviePlayer,
+  closeMoviePlayer,
+  setCurrentMovie,
+  setOpenMenu,
+} = UiSlice.actions;
 
 export default store;

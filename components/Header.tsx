@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Menu from "./Menu";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -25,14 +26,18 @@ const Header = () => {
       } fixed top-0 w-screen z-40 transition duration-500 ease-in`}
     >
       <div className="flex items-center justify-between space-x-4 py-3 px-5 md:py-5 md:px-8">
-        <Link href="/">
-          <img
-            className="w-24 h-8 cursor-pointer"
-            loading="lazy"
-            src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Logonetflix.png"
-            alt="logo"
-          />
-        </Link>
+        <div className="flex items-center space-x-2">
+          <Link href="/">
+            <img
+              className="w-20 h-6 sm:w-24 sm:h-8 cursor-pointer"
+              loading="lazy"
+              src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Logonetflix.png"
+              alt="logo"
+            />
+          </Link>
+
+          <Menu />
+        </div>
 
         <div className="hidden md:inline-flex flex-1 items-center space-x-4">
           <Link href="/">

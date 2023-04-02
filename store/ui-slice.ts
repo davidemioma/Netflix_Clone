@@ -5,6 +5,7 @@ const UiSlice = createSlice({
   initialState: {
     moviePlayerOpen: false,
     currentMovie: null,
+    openMenu: false,
   },
   reducers: {
     setCurrentMovie(state, action) {
@@ -18,11 +19,17 @@ const UiSlice = createSlice({
     closeMoviePlayer(state) {
       state.moviePlayerOpen = false;
     },
+
+    setOpenMenu(state, actiom) {
+      state.openMenu = actiom.payload;
+    },
   },
 });
 
 export const currentMovieSelector = (state: any) => state.ui.currentMovie;
 
 export const moviePlayerSelector = (state: any) => state.ui.moviePlayerOpen;
+
+export const menuSelector = (state: any) => state.ui.openMenu;
 
 export default UiSlice;

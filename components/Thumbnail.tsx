@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { MovieProps } from "../types";
 import { useDispatch } from "react-redux";
-import { setCurrentMovie, openMoviePlayer } from "../store/store";
+import { setCurrentMovie, openMoviePlayer, setOpenMenu } from "../store/store";
 
 interface Props {
   movie: MovieProps;
@@ -12,6 +12,8 @@ const Thumbnail = ({ movie }: Props) => {
   const dispatch = useDispatch();
 
   const onClickListener = () => {
+    dispatch(setOpenMenu(false));
+
     dispatch(setCurrentMovie(movie));
 
     dispatch(openMoviePlayer());
