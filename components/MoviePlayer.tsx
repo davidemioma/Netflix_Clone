@@ -77,7 +77,7 @@ const MoviePlayer = () => {
   useEffect(
     () =>
       onSnapshot(
-        collection(db, "users", `${user?.uid}`, "bookmarks"),
+        collection(db, "customers", `${user?.uid}`, "bookmarks"),
         (snapshot) => {
           setMyList(
             snapshot.docs.map((doc: any) => ({
@@ -109,13 +109,25 @@ const MoviePlayer = () => {
 
       if (addedToList) {
         await deleteDoc(
-          doc(db, "users", `${user?.uid}`, "bookmarks", `${currentMovie.id}`)
+          doc(
+            db,
+            "customers",
+            `${user?.uid}`,
+            "bookmarks",
+            `${currentMovie.id}`
+          )
         );
 
         setLoading(false);
       } else {
         await setDoc(
-          doc(db, "users", `${user?.uid}`, "bookmarks", `${currentMovie.id}`),
+          doc(
+            db,
+            "customers",
+            `${user?.uid}`,
+            "bookmarks",
+            `${currentMovie.id}`
+          ),
           {
             ...rest,
           }

@@ -52,4 +52,8 @@
   .tableDataFeature {
     @apply w-[calc(100%/3)] md:w-[calc(60%/3)] text-center;
   }
+
+  .membershipLink {
+    @apply cursor-pointer text-blue-500 hover:underline;
+  }
 }

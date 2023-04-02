@@ -51,7 +51,7 @@ const Home = ({
   useEffect(
     () =>
       onSnapshot(
-        collection(db, "users", `${user?.uid}`, "bookmarks"),
+        collection(db, "customers", `${user?.uid}`, "bookmarks"),
         (snapshot) => {
           setMyList(
             snapshot.docs.map((doc: any) => ({
