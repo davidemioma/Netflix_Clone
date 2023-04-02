@@ -6,6 +6,7 @@ import Loader from "../components/Loader";
 import Login from "../components/Login";
 import { Provider } from "react-redux";
 import store from "../store/store";
+import { Toaster } from "react-hot-toast";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [user, loading] = useAuthState(auth);
@@ -17,6 +18,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       <Component {...pageProps} />
+
+      <Toaster position="bottom-center" />
     </Provider>
   );
 }

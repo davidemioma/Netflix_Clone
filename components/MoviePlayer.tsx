@@ -15,15 +15,10 @@ import {
   VolumeOffIcon,
   VolumeUpIcon,
 } from "@heroicons/react/outline";
-import {
-  collection,
-  deleteDoc,
-  doc,
-  onSnapshot,
-  setDoc,
-} from "@firebase/firestore";
+import { deleteDoc, doc, setDoc } from "@firebase/firestore";
 import { auth, db } from "../firebase";
-import { MovieProps } from "../types";
+import useList from "../hooks/useList";
+import toast from "react-hot-toast";
 
 const MoviePlayer = () => {
   const dispatch = useDispatch();
@@ -42,11 +37,21 @@ const MoviePlayer = () => {
 
   const [playing, setPlaying] = useState(false);
 
-  const [myList, setMyList] = useState<MovieProps[]>([]);
+  const myList = useList();
 
   const [loading, setLoading] = useState(false);
 
   const [addedToList, setAddedToList] = useState(false);
+
+  const toastStyle = {
+    background: "white",
+    color: "black",
+    fontWeight: "bold",
+    fontSize: "16px",
+    padding: "15px",
+    borderRadius: "9999px",
+    maxWidth: "1000px",
+  };
 
   const closePlayerHandeler = () => {
     dispatch(setCurrentMovie(null));
@@ -76,22 +81,6 @@ const MoviePlayer = () => {
 
   useEffect(
     () =>
-      onSnapshot(
-        collection(db, "customers", `${user?.uid}`, "bookmarks"),
-        (snapshot) => {
-          setMyList(
-            snapshot.docs.map((doc: any) => ({
-              id: doc.id,
-              ...doc.data(),
-            }))
-          );
-        }
-      ),
-    []
-  );
-
-  useEffect(
-    () =>
       setAddedToList(
         myList?.findIndex((movie) => `${movie.id}` === `${currentMovie.id}`) !==
           -1
@@ -109,31 +98,39 @@ const MoviePlayer = () => {
 
       if (addedToList) {
         await deleteDoc(
-          doc(
-            db,
-            "customers",
-            `${user?.uid}`,
-            "bookmarks",
-            `${currentMovie.id}`
-          )
+          doc(db, "customers", user!.uid, "myList", `${currentMovie?.id}`)
         );
 
         setLoading(false);
+
+        toast(
+          `${
+            currentMovie?.title || currentMovie?.original_name
+          } has been removed from My list`,
+          {
+            duration: 5000,
+            style: toastStyle,
+          }
+        );
       } else {
         await setDoc(
-          doc(
-            db,
-            "customers",
-            `${user?.uid}`,
-            "bookmarks",
-            `${currentMovie.id}`
-          ),
+          doc(db, "customers", user!.uid, "myList", `${currentMovie?.id}`),
           {
             ...rest,
           }
         );
 
         setLoading(false);
+
+        toast(
+          `${
+            currentMovie?.title || currentMovie?.original_name
+          } has been added to My list`,
+          {
+            duration: 5000,
+            style: toastStyle,
+          }
+        );
       }
     } catch (err) {
       setLoading(false);

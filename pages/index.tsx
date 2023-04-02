@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import Head from "next/head";
 import axios from "axios";
 import request from "../util/request";
@@ -9,8 +8,7 @@ import Row from "../components/Row";
 import MoviePlayer from "../components/MoviePlayer";
 import { moviePlayerSelector } from "../store/ui-slice";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { collection, onSnapshot } from "@firebase/firestore";
-import { auth, db } from "../firebase";
+import { auth } from "../firebase";
 import { getProducts, Product } from "@stripe/firestore-stripe-payments";
 import payments from "../lib/stripe";
 import Plans from "../components/Plans";
@@ -18,6 +16,7 @@ import useSubscription from "../hooks/useSubscription";
 import { useDispatch, useSelector } from "react-redux";
 import { menuSelector } from "../store/ui-slice";
 import { setOpenMenu } from "../store/store";
+import useList from "../hooks/useList";
 
 interface Props {
   netflixOriginals: MovieProps[];
@@ -44,7 +43,7 @@ const Home = ({
 }: Props) => {
   const [user, loading] = useAuthState(auth);
 
-  const [myList, setMyList] = useState<MovieProps[]>([]);
+  const myList = useList();
 
   const playerOpen = useSelector(moviePlayerSelector);
 
@@ -53,22 +52,6 @@ const Home = ({
   const dispatch = useDispatch();
 
   const openMenu = useSelector(menuSelector);
-
-  useEffect(
-    () =>
-      onSnapshot(
-        collection(db, "customers", `${user?.uid}`, "bookmarks"),
-        (snapshot) => {
-          setMyList(
-            snapshot.docs.map((doc: any) => ({
-              id: doc.id,
-              ...doc.data(),
-            }))
-          );
-        }
-      ),
-    []
-  );
 
   if (loading || subscription === null) return null;
 
