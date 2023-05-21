@@ -105,6 +105,14 @@ const Plans = ({ products }: Props) => {
           >
             {loading ? <BtnSpinner /> : <p>Subscribe</p>}
           </button>
+
+          <p className="mt-5 text-sm">
+            Note: To facilitate testing subscription payments, you can use the
+            following example card details: Card number: 4242 4242 4242 4242
+            Expiration date: 04/24 CVV: 242 Please note that these card details
+            are for testing purposes only and should not be used for any actual
+            transactions.
+          </p>
         </div>
       </main>
     </div>
