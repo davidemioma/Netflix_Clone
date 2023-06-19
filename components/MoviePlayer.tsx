@@ -140,8 +140,10 @@ const MoviePlayer = () => {
   };
 
   return (
-    <div className="fixed top-0 left-0 h-screen overflow-x-scroll w-screen bg-black/60 z-50">
-      <div className="relative mx-auto w-[95%] md:w-[80%] h-[300px] sm:h-[400px] md:h-[500px] pt-8">
+    <>
+      <div className="fixed inset-0 h-screen w-screen bg-black/60 z-40" />
+
+      <div className="fixed top-2 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-2xl h-[300px] sm:h-[350px] pt-8">
         <button
           className="bg-black modalBtn absolute top-5 right-0 z-30 "
           onClick={closePlayerHandeler}
@@ -196,55 +198,55 @@ const MoviePlayer = () => {
             )}
           </button>
         </div>
-      </div>
 
-      <div className="bg-[#181818] px-5 sm:px-10 py-8 mx-auto w-[95%] md:w-[80%] mb-10">
-        <div className="flex items-center space-x-2 mb-5 text-sm">
-          <p className="text-green-400">
-            {currentMovie?.vote_average * 10}% Match
-          </p>
+        <div className="bg-[#181818] w-full px-5 sm:px-10 py-8 mx-auto mb-10">
+          <div className="flex items-center space-x-2 mb-5 text-sm">
+            <p className="text-green-400">
+              {currentMovie?.vote_average * 10}% Match
+            </p>
 
-          <p>{currentMovie?.release_date || currentMovie?.first_air_date}</p>
+            <p>{currentMovie?.release_date || currentMovie?.first_air_date}</p>
 
-          <div className="flex items-center text-xs justify-center w-8 h-6 rounded bg-black border border-gray-500">
-            HD
-          </div>
-        </div>
-
-        <div className="flex flex-col lg:flex-row lg:space-x-5">
-          <p
-            onClick={() => setLineClamp((prev) => !prev)}
-            className={`text-sm leading-6 lg:w-[90%] mb-3 lg:mb-0 ${
-              lineClamp ? "line-clamp-2 md:line-clamp-none" : "line-clamp-none"
-            }`}
-          >
-            {currentMovie?.overview}
-          </p>
-
-          <div className="flex flex-col space-y-2">
-            <div className="text-sm">
-              <span className="text-[gray]">Title:</span>{" "}
-              {currentMovie?.title || currentMovie?.original_title}
-            </div>
-
-            <div className="text-sm">
-              <span className="text-[gray]">Genres:</span>{" "}
-              {genres.map((genre) => genre.name).join(", ")}
-            </div>
-
-            <div className="text-sm">
-              <span className="text-[gray]">Original language:</span>{" "}
-              {currentMovie?.original_language}
-            </div>
-
-            <div className="text-sm">
-              <span className="text-[gray]">Total votes:</span>{" "}
-              {currentMovie?.vote_count}
+            <div className="flex items-center text-xs justify-center w-8 h-6 rounded bg-black border border-gray-500">
+              HD
             </div>
           </div>
+
+          <div className="flex flex-col lg:flex-row lg:space-x-5">
+            <p
+              onClick={() => setLineClamp((prev) => !prev)}
+              className={`text-xs leading-6 lg:w-[90%] mb-3 lg:mb-0 ${
+                lineClamp ? "line-clamp-2" : "line-clamp-none"
+              }`}
+            >
+              {currentMovie?.overview}
+            </p>
+
+            <div className="flex flex-col space-y-2">
+              <div className="text-sm">
+                <span className="text-[gray]">Title:</span>{" "}
+                {currentMovie?.title || currentMovie?.original_title}
+              </div>
+
+              <div className="text-sm">
+                <span className="text-[gray]">Genres:</span>{" "}
+                {genres.map((genre) => genre.name).join(", ")}
+              </div>
+
+              <div className="text-sm">
+                <span className="text-[gray]">Original language:</span>{" "}
+                {currentMovie?.original_language}
+              </div>
+
+              <div className="text-sm">
+                <span className="text-[gray]">Total votes:</span>{" "}
+                {currentMovie?.vote_count}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

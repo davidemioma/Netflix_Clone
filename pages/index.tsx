@@ -59,9 +59,7 @@ const Home = ({
 
   return (
     <div
-      className={`${
-        playerOpen ? "h-screen overflow-hidden" : "h-screen lg:h-[140vh]"
-      } relative w-screen bg-gradient-to-b`}
+      className="h-screen lg:h-[140vh] relative w-screen bg-gradient-to-b"
       onClick={() => openMenu && dispatch(setOpenMenu(false))}
     >
       <Head>
